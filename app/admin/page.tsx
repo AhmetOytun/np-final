@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useState, useEffect } from "react";
 
 type AlbumType = {
@@ -22,6 +23,7 @@ function Admin() {
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const user = useAuthStore((state) => state.user);
 
   // Fetch albums on mount
   useEffect(() => {
@@ -117,6 +119,22 @@ function Admin() {
       console.error(err);
     }
   };
+
+  if (user === null) {
+    return (
+      <div className="max-w-lg mx-auto mt-12 p-8 bg-white rounded-xl shadow-lg text-center">
+        <p className="text-red-600 font-semibold">Access Denied</p>
+      </div>
+    );
+  }
+
+  if (user.username !== "admin") {
+    return (
+      <div className="max-w-lg mx-auto mt-12 p-8 bg-white rounded-xl shadow-lg text-center">
+        <p className="text-red-600 font-semibold">Access Denied</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-lg mx-auto mt-12 p-8 bg-white rounded-xl shadow-lg">

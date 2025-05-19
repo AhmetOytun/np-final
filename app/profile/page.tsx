@@ -3,6 +3,7 @@
 import Navbar from "@/components/Navbar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface User {
@@ -31,7 +32,9 @@ interface User {
 }
 
 export default function Profile() {
+  const router = useRouter();
   const token = useAuthStore((state) => state.token);
+  const logout = useAuthStore((state) => state.logout);
   const [user, setUser] = useState<User | null>(null);
   const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
   const [editedTitle, setEditedTitle] = useState("");
@@ -180,6 +183,8 @@ export default function Profile() {
     if (res.ok) {
       // logout or redirect to homepage or login page after deletion
       alert("User account deleted");
+      logout();
+      router.push("/auth/sign-in");
       // clear token or redirect logic here
     } else {
       alert("Failed to delete user");
@@ -235,13 +240,13 @@ export default function Profile() {
               <p className="text-gray-600">{user?.email}</p>
               <button
                 onClick={() => setIsEditingProfile(true)}
-                className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 hover:cursor-pointer"
               >
                 Edit Profile
               </button>
               <button
                 onClick={handleDeleteUser}
-                className="mt-3 ml-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                className="mt-3 ml-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 hover:cursor-pointer"
               >
                 Delete Account
               </button>
